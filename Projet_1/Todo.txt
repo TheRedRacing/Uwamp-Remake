@@ -1,0 +1,5 @@
+1) Create a txt file in your folder with text inside
+2) Refresh the page
+3) Click on the button
+4) Watch your text in a dialog
+5) For exit click around the dialog
