@@ -192,24 +192,26 @@ if (isset($_REQUEST['getimg']))
 			title.html(val[1]);
 			
 			console.log(val);
-			
-			$.ajax({
-	            url : val[0]+'/'+val[1],
-	            dataType: "text",
-	            success : function (data) 
-	            {
-	            	console.log(data);
-	            	if (data=='') 
+
+			body.load(val[0]+'/'+val[1],function( response, status, xhr ) 
+			{
+				if (success='success') 
+				{
+					if (response=='') 
 	            	{
 	            		body.html('<div class="alert alert-danger" role="alert">'+val[1]+' file is empty!</div>');
 	            	}
 	            	else
 	            	{
-	                	body.html(nl2br(data));
+	                	body.html(nl2br(response));
 	                }
-	            }
-	        });
-
+				}
+				else
+				{
+					body.html('<div class="alert alert-danger" role="alert">An error has occurred. Please try again</div>');
+				}
+			});
+			
 			$('#showModal').modal('show')
 		})
 
