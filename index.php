@@ -18,12 +18,12 @@ $UWAMPFOLDER="../";
 </head>
 <body class="m-0 p-0">
 	<div style="min-height: 100vh;" id="section1">
-		<div class=" text-white bg-dark mb-3 w-100">
-			<div class="d-flex justify-content-between card-header container">
+		<div class="text-white bg-dark mb-3 w-100 border-bottom">
+			<div class="d-flex justify-content-between p-3 container ">
 				<div class="d-flex">
 					<img src="AA-resources/img/uwamp.png" style="height:50px;">
 					<h2 class="align-self-center ml-2 mb-0">Wamp Serveur</h2>
-					<small class="align-self-end small">V1.5</small>
+					<small class="align-self-end small">V1.6</small>
 				</div>
 				<div class="">
 					<button id="btnswitchmode" class="btn btn-dark border-light my-2">
@@ -59,106 +59,51 @@ $UWAMPFOLDER="../";
 					</ul>
 	  			</div>
 			</div>
+
+					
 			<div class="card mt-2">
-				<div class="card-header d-flex justify-content-around">
-					<a class="my-2 btn border text-dark" href="#carouselExampleIndicators" role="button" data-slide="prev">
-						<span class="" aria-hidden="true"><i style="line-height: 38px;" class="fas fa-fw fa-chevron-left text-dark icon"></i></span>
-						<span class="sr-only">Previous</span>
-					</a>
-					<h2 class="my-2">Virtual Host</h2>					
-					<a class="my-2 btn border text-dark" href="#carouselExampleIndicators" role="button" data-slide="next">
-						<span class="" aria-hidden="true"><i style="line-height: 38px;" class="fas fa-fw fa-chevron-right text-dark icon"></i></span>
-						<span class="sr-only">Next</span>
-					</a>
+				<?php 
+					if (empty($_SESSION['affichage']))
+					{
+						$_SESSION['affichage'] = 'List';
+					}
+
+					if (isset($_POST['btnmode'])) 
+					{
+						if ($_POST['btnmode'] == 'List') 
+						{
+							$_SESSION['affichage'] = 'Block';
+						}
+						else
+						{
+							$_SESSION['affichage'] = 'List';
+						}
+					}
+
+					if ($_SESSION['affichage']=='Block') 
+					{
+						include 'AA-resources/view/modelist.php';
+						$_SESSION['affichage'] = 'List';
+					}
+					else
+					{
+						include 'AA-resources/view/modeslider.php';
+						$_SESSION['affichage'] = 'Block';
+					}
+				?>			
+			<div class="card-footer">
+				<div class="ml-auto">
+					<div class="btn-group btn-group-sm" role="group" aria-label="Basic example">
+						<form action="" method="POST">
+							<button value="List" type="submit" name="btnmode" class="btn <?php if($_SESSION['affichage']=='List'){echo 'bg-dark text-white';}?>"><i class="fas fa-list-ul"></i></button>
+							<button value="block" type="submit" name="btnmode" class="btn <?php if($_SESSION['affichage']=='Block'){echo 'bg-dark text-white';}?>"><i class="fas fa-th-large"></i></button>
+						</form>
+					</div>
 				</div>
-				<div class="card-body p-0">
-					<div id="carouselExampleIndicators" class="carousel slide pt-4" data-ride="carousel">
-  						<div class="carousel-inner">
-  							<div class="carousel-item active">
-  								<div class="d-flex justify-content-around">
-		  							<?php
-									$handle=opendir($UWAMPFOLDER."www");
-									$count=0;
-									$idcount=0;
-									$countslide = 1;
-									while ($file = readdir($handle)) 
-									{	
-										
-										if ($file=="." || $file==".." || $file=="AA-resources") continue;
-										if (is_dir($file))
-										{	
-
-											
-											//echo $count;
-											$count++;
-											echo '
-											<div class="card mx-2" style="width: 15rem;">
-			  									<div class="card-header text-center">'.$file.'</div>
-			  									<div class="card-body">
-			    									<a class="my-1 btn btn-primary border-dark w-100" href="/'.$file.'">Open</a>
-			    									<div class="btn-group w-100" role="group" aria-label="Basic example">';
-			    						
-											
-											$filehandle = opendir($file);												
-											while ($file2 = readdir($filehandle)) 
-											{
-												if ($file2 =="." || $file2 =="..") continue;
-
-												$file_parts = pathinfo($file2);
-												
-												if (count($file_parts) > 3) 
-												{
-
-													//var_dump($file_parts);
-													if ($file_parts['extension'] == 'txt') 
-													{
-														echo '<button id="btnmodal'.$idcount.'" class="btnmodal btn btn-info border-dark" value="'.$file.','.$file_parts['basename'].'">'.$file_parts['filename'].'</button>';
-														$idcount++;
-													}
-												}
-
-											}
-
-											echo '</div></div></div>';// end btn group // end card body // end card
-											if ($count%4 == 0) 
-											{
-												echo '</div></div>'; // end flex // end carousel-item
-												$countslide++;
-												echo '<div class="carousel-item"><div class="d-flex justify-content-around">';
-											}				
-										}								
-									}
-									closedir($handle);
-									if ($count==0)
-									{
-										echo '
-										<div class="alert alert-danger text-center mb-0" role="alert">
-											<p class="mt-1">No project found</p>
-										</div>';
-									}
-									?>
-								</div>
-							</div>
-					  	</div>
-					  	<div class="card-footer mt-2">
-							<ol class="carousel-indicators m-0">
-								<?php 
-									for ($i=0; $i < $countslide; $i++) 
-									{ 
-										if ($i==0) 
-										{
-											echo '<li class="active indicator bg-dark" data-target="#carouselExampleIndicators" data-slide-to="'.$i.'"></li>';
-										}
-										else
-										{
-											echo '<li class="indicator bg-dark" data-target="#carouselExampleIndicators" data-slide-to="'.$i.'"></li>';
-										}
-									}
-								?>
-		  					</ol>
-						</div>					
-  					</div>
-				</div>				
+			</div>		
+					
+					
+								
 			</div>
 			<div class="alert bg-light text-center mt-2 mb-1" role="alert">
 				<h2 class="my-1 d-flex justify-content-around">
@@ -238,7 +183,12 @@ $UWAMPFOLDER="../";
 <script>
 	$(document).ready(function()
 	{
+		$('#carouselproject').carousel({
+       		pause: true,
+        	interval: false
+    	});
 		let btn = $('.btnmodal');	
+
 
 		btn.click(function()
 		{
@@ -272,18 +222,7 @@ $UWAMPFOLDER="../";
 			$('#showModal').modal('show')
 		})
 
-		function nl2br (str, is_xhtml) 
-		{
-    		if (typeof str === 'undefined' || str === null) 
-    		{
-        		return '';
-   			}
-    		var breakTag = (is_xhtml || typeof is_xhtml === 'undefined') ? '<br />' : '<br>';
-    		return (str + '').replace(/([^>\r\n]?)(\r\n|\n\r|\r|\n)/g, '$1' + breakTag + '$2');
-		}
-
 		let check = sessionStorage.getItem('mode');
-		console.log(check);
 		if (check=='Dark') 
 		{
 			sessionStorage.setItem('mode', 'light');
@@ -309,8 +248,10 @@ $UWAMPFOLDER="../";
 				$('.alert').removeClass('bg-dark border-light text-white');
 				$('.icon').removeClass('text-light');
 				$('.icon').addClass('text-dark');
+				$('.modal-header').removeClass('bg-dark text-light');
+				$('.modal-body').removeClass('bg-dark text-light');
+				$('.modal-footer').removeClass('bg-dark text-light');
 				sessionStorage.setItem('mode', 'Light');
-				console.log(sessionStorage.getItem('mode'));
 			}
 			else
 			{
@@ -323,11 +264,22 @@ $UWAMPFOLDER="../";
 				$('.alert').addClass('bg-dark border-light text-white');
 				$('.icon').removeClass('text-dark');
 				$('.icon').addClass('text-light');
+				$('.modal-header').addClass('bg-dark text-light');
+				$('.modal-body').addClass('bg-dark text-light');
+				$('.modal-footer').addClass('bg-dark text-light');
 				sessionStorage.setItem('mode', 'Dark');
-				console.log(sessionStorage.getItem('mode'));
 			}
 		}
 
+		function nl2br (str, is_xhtml) 
+		{
+    		if (typeof str === 'undefined' || str === null) 
+    		{
+        		return '';
+   			}
+    		var breakTag = (is_xhtml || typeof is_xhtml === 'undefined') ? '<br />' : '<br>';
+    		return (str + '').replace(/([^>\r\n]?)(\r\n|\n\r|\r|\n)/g, '$1' + breakTag + '$2');
+		}  
 
 		// Add smooth scrolling to all links
 	  	$(".section").on('click', function(event) 
